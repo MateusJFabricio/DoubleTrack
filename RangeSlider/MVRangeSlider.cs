@@ -11,12 +11,19 @@ namespace RangeSlider
 {
     public partial class MVRangeSlider : UserControl
     {
+        public delegate void ValueChanged(double startValue, double endValue, bool innerRange);
+        public event ValueChanged OnValueChanged;
         private const int border = 10;
-        private string text;
+        private string text = "dafault";
         public string Label
         {
             get => text;
-            set { text = value; Invalidate(); }
+            set 
+            {
+                if (value == null) return;
+                text = value; 
+                Invalidate(); 
+            }
         }
             
         private bool innerRange = true;
@@ -27,6 +34,7 @@ namespace RangeSlider
             {
                 innerRange = value;
                 Invalidate();
+                OnValueChanged?.Invoke(valueStart, valueEnd, innerRange);
             }
         }
         private double min = 0;
@@ -63,6 +71,7 @@ namespace RangeSlider
             {
                 valueStart = Math.Round(value, 1);
                 Invalidate();
+                OnValueChanged?.Invoke(valueStart, valueEnd, innerRange);
             }
         }
         private double valueEnd = 20;
@@ -73,6 +82,7 @@ namespace RangeSlider
             {
                 valueEnd = Math.Round(value, 1);
                 Invalidate();
+                OnValueChanged?.Invoke(valueStart, valueEnd, innerRange);
             }
         }
 
